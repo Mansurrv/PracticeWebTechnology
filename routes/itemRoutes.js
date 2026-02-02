@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/itemController");
+const apiKeyMiddleware = require("../middlewares/authMiddleware");
 
 router.get("/", controller.getAllItems);
 router.get("/:id", controller.getItemById);
-router.post("/", controller.createItem);
-router.put("/:id", controller.updateItem);
-router.patch("/:id", controller.patchItem);
-router.delete("/:id", controller.deleteItem);
+
+router.post("/", apiKeyMiddleware, itemController.createItem);
+router.put("/:id", apiKeyMiddleware, itemController.updateItem);
+router.patch("/:id", apiKeyMiddleware, itemController.patchItem);
+router.delete("/:id", apiKeyMiddleware, itemController.deleteItem);
 
 module.exports = router;
