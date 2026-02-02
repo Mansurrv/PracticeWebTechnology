@@ -1,0 +1,12 @@
+const express = require("express");
+const router = express.Router();
+const controller = require("../controllers/itemController");
+
+router.get("/", controller.getAllItems);
+router.get("/:id", controller.getItemById);
+router.post("/", controller.createItem);
+router.put("/:id", controller.updateItem);
+router.patch("/:id", controller.patchItem);
+router.delete("/:id", controller.deleteItem);
+
+module.exports = router;

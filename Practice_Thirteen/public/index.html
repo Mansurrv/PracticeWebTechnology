@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>REST API Practice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+    }
+    input, button {
+      padding: 6px;
+      margin: 4px 0;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>REST API Practice – Items</h1>
+
+  <!-- GET ALL -->
+  <h3>GET All Items</h3>
+  <button onclick="getAllItems()">GET</button>
+
+  <!-- GET BY ID -->
+  <h3>GET Item by ID</h3>
+  <input id="getId" placeholder="Item ID">
+  <button onclick="getItemById()">GET</button>
+
+  <!-- CREATE -->
+  <h3>POST Create Item</h3>
+  <input id="postName" placeholder="Name">
+  <input id="postPrice" placeholder="Price" type="number">
+  <button onclick="createItem()">POST</button>
+
+  <!-- PATCH -->
+  <h3>PATCH Update Item</h3>
+  <input id="patchId" placeholder="Item ID">
+  <input id="patchName" placeholder="New Name (optional)">
+  <input id="patchPrice" placeholder="New Price (optional)" type="number">
+  <button onclick="patchItem()">PATCH</button>
+
+  <!-- DELETE -->
+  <h3>DELETE Item</h3>
+  <input id="deleteId" placeholder="Item ID">
+  <button onclick="deleteItem()">DELETE</button>
+
+  <h3>Response</h3>
+  <pre id="output"></pre>
+
+<script>
+const output = document.getElementById("output");
+
+function show(data) {
+  output.textContent = JSON.stringify(data, null, 2);
+}
+
+// GET all
+async function getAllItems() {
+  const res = await fetch("/api/items");
+  const data = await res.json();
+  show(data);
+}
+
+// GET by ID
+async function getItemById() {
+  const id = document.getElementById("getId").value;
+  const res = await fetch(`/api/items/${id}`);
+  const data = await res.json();
+  show(data);
+}
+
+// POST
+async function createItem() {
+  const name = document.getElementById("postName").value;
+  const price = document.getElementById("postPrice").value;
+
+  const res = await fetch("/api/items", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, price })
+  });
+
+  const data = await res.json();
+  show(data);
+}
+
+// PATCH
+async function patchItem() {
+  const id = document.getElementById("patchId").value;
+  const name = document.getElementById("patchName").value;
+  const price = document.getElementById("patchPrice").value;
+
+  const body = {};
+  if (name) body.name = name;
+  if (price) body.price = price;
+
+  const res = await fetch(`/api/items/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  show(data);
+}
+
+// DELETE
+async function deleteItem() {
+  const id = document.getElementById("deleteId").value;
+
+  const res = await fetch(`/api/items/${id}`, {
+    method: "DELETE"
+  });
+
+  if (res.status === 204) {
+    show({ message: "Item deleted successfully" });
+  } else {
+    const data = await res.json();
+    show(data);
+  }
+}
+</script>
+
+</body>
+</html>
