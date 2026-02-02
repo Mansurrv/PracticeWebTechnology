@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const itemController = require("../controllers/itemController");
-const apiKeyMiddleware = require("../middlewares/authMiddleware");
+const apiKeyMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", itemController.getAllItems);
 router.get("/:id", itemController.getItemById);
